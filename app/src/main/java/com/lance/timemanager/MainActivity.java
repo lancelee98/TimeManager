@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lance.timemanager.pictureExamle.biscalPicture;
+
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView textView;
-    private Button button;
+    private Button button,button1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.textView);
         button = findViewById(R.id.button2);
+        button1=findViewById(R.id.button3);//qzx：前往饼状图活动摁扭
+        button1.setOnClickListener(this);
         button.setOnClickListener(this);
         GET_USAGE_ACCESS();
     }
@@ -67,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 break;
+            case R.id.button3:
+                Intent intent = new Intent(MainActivity.this, biscalPicture.class);
+                startActivity(intent);
+
+
         }
     }
 
