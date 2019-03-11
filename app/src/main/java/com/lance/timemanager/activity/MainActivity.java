@@ -1,4 +1,4 @@
-package com.lance.timemanager;
+package com.lance.timemanager.activity;
 
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
@@ -14,7 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lance.timemanager.pictureExamle.biscalPicture;
+import com.lance.timemanager.R;
+import com.lance.timemanager.pictureExamle.circlePicture;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.button3:
-                Intent intent = new Intent(MainActivity.this, biscalPicture.class);
+                Intent intent = new Intent(MainActivity.this, circlePicture.class);
                 startActivity(intent);
 
 

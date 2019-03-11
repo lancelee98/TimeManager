@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".pictureExamle.circlePicture">
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".pictureExamle.barchartPicture">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <LinearLayout
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,13 +39,13 @@
                         android:layout_marginLeft="11dp"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="民族分布"
+                        android:text="一条柱状图"
                         android:textColor="#222222"
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pie_chat1"
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/Bar_chat1"
                     android:layout_width="match_parent"
                     android:layout_height="250dp" />
             </LinearLayout>
@@ -75,16 +74,15 @@
                         android:layout_marginLeft="11dp"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="学历分布"
+                        android:text="多条柱状图"
                         android:textColor="#222222"
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pie_chat2"
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/Bar_chat2"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    />
+                    android:layout_height="250dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

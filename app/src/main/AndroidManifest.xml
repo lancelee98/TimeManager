@@ -11,8 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pictureExamle.biscalPicture"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".pictureExamle.barchartPicture"></activity>
+        <activity android:name=".pictureExamle.circlePicture" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -11,7 +11,7 @@ import com.lance.timemanager.pictureManagerClass.biscalPirctureManager;
 
 import java.util.ArrayList;
 import java.util.List;
-public class biscalPicture extends AppCompatActivity {
+public class circlePicture extends AppCompatActivity {
 
     private PieChart pieChart,pieChat2;
     @Override
