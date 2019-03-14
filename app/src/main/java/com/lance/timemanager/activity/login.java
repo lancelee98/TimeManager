@@ -61,9 +61,9 @@ public class login extends AppCompatActivity {
                                     ToastUtils.show(login.this,"用户名不存在！");
                                 } else {
                                     if (Password.equals(realPasswd)) {
-                                        ToastUtils.show(login.this,"登录成功！");
-//                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
-//                                        startActivity(intent);
+//                                        ToastUtils.show(login.this,"登录成功！");
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
+                                        startActivity(intent);
                                     } else {
                                         ToastUtils.show(login.this,"密码错误！");
                                     }
