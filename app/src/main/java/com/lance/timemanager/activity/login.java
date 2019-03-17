@@ -25,6 +25,7 @@ import okhttp3.Response;
 
 public class login extends AppCompatActivity {
     private Button Login;
+    private TextView Sign;
     private TextView username;
     private TextView password;
     private String Username;
@@ -37,8 +38,16 @@ public class login extends AppCompatActivity {
         getSupportActionBar().hide();//隐藏标题栏
         setContentView(R.layout.activity_login);
         Login = findViewById(R.id.login);
+        Sign=findViewById(R.id.sign);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
+        Sign.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), sign.class);//启动MainActivity
+                startActivity(intent);
+            }
+        });
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
