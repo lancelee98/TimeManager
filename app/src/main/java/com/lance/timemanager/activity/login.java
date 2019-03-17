@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lance.timemanager.R;
+import com.lance.timemanager.util.ToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,7 +31,7 @@ public class login extends AppCompatActivity {
     private TextView password;
     private String Username;
     private String Password;
-    private String password1 = "";
+    private String realPasswd = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,27 +63,26 @@ public class login extends AppCompatActivity {
                                 Request request = new Request.Builder().url("http://118.89.37.35:58123/application/user/getInfo.php?userName=" + Username).build();
                                 Response response = client.newCall(request).execute();
                                 String responseData = response.body().string();
-                                System.out.println("qzxlc" + responseData);
-                                System.out.println(password1+"asd1");
-                                System.out.println(Password+"asd2");
+                                System.out.println("getRespondData" + responseData);
                                 parseJSONWithJSONObject(responseData);
-                                System.out.println(password1+"asd2");
+                                System.out.println("getRealPassWd"+realPasswd);
+                                if (realPasswd.equals("")) {
+                                    ToastUtils.show(login.this,"用户名不存在！");
+                                } else {
+                                    if (Password.equals(realPasswd)) {
+//                                        ToastUtils.show(login.this,"登录成功！");
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
+                                        startActivity(intent);
+                                    } else {
+                                        ToastUtils.show(login.this,"密码错误！");
+                                    }
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     })).start();
-                    System.out.println(password1+"sdff");
-                    if (password1.equals("")) {
-                        Toast.makeText(login.this, "用户名不存在！", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (Password.equals(password1)) {
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(login.this, "密码错误！", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+
                 } else {
                     Toast.makeText(login.this, "用户名密码不得为空！", Toast.LENGTH_SHORT).show();
                 }
@@ -94,13 +94,15 @@ public class login extends AppCompatActivity {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray data = jsonObject.getJSONArray("data");
-            JSONObject a=data.getJSONObject(0);
-            password1 = a.getString("passwd");
-            System.out.println(password1+"asd");
+            if(data.length()==0)
+                realPasswd="";
+            else
+                {
+                JSONObject a=data.getJSONObject(0);
+                realPasswd = a.getString("passwd");
+                }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
-
-//
