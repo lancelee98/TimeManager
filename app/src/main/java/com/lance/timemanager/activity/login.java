@@ -36,7 +36,6 @@ public class login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
-        getSupportActionBar().hide();//隐藏标题栏
         setContentView(R.layout.activity_login);
         Login = findViewById(R.id.login);
         Sign=findViewById(R.id.sign);
@@ -72,6 +71,8 @@ public class login extends AppCompatActivity {
                                     if (Password.equals(realPasswd)) {
 //                                        ToastUtils.show(login.this,"登录成功！");
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
+                                        System.out.println(Username+"qzx1");
+                                        intent.putExtra("username",Username);
                                         startActivity(intent);
                                     } else {
                                         ToastUtils.show(login.this,"密码错误！");
