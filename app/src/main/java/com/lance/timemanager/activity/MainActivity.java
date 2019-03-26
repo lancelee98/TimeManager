@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private DevicePolicyManager policyManager;
     private ComponentName componentName;
     private DrawerLayout drawerLayout;
-    private TextView Username;
+    private TextView Credit;
     public String username;
-
+    public int credit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +52,16 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.menu);
         }
-        Username=findViewById(R.id.use);
         Intent intent=getIntent();
         username=intent.getStringExtra("username");
+        credit=intent.getIntExtra("credit",0);
         System.out.println(username+"qzx");
         if(navigationView.getHeaderCount() > 0) {
             View header = navigationView.getHeaderView(0);
             TextView un = (TextView) header.findViewById(R.id.use);
-            un.setText(username);
+            Credit=header.findViewById(R.id.credit);
+            Credit.setText("积分:"+credit);
+            un.setText("用户名:"+username);
         }
 //        Button button = (Button) findViewById(R.id.OpenButton);
 //        Button seeButton = (Button) findViewById(R.id.button);
