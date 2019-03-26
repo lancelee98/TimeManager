@@ -10,10 +10,18 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lance.timemanager.R;
@@ -27,59 +35,93 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_REQUEST_CODE = 9999;
     private DevicePolicyManager policyManager;
     private ComponentName componentName;
-
+    private DrawerLayout drawerLayout;
+    private TextView Credit;
+    public String username;
+    public int credit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button button = (Button) findViewById(R.id.OpenButton);
-        Button seeButton = (Button) findViewById(R.id.button);
-        Button lockButton = (Button) findViewById(R.id.lockBotton);
+        Toolbar toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerLayout=findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nac_view);
+        ActionBar actionBar=getSupportActionBar();
+        if (actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+        }
+        Intent intent=getIntent();
+        username=intent.getStringExtra("username");
+        credit=intent.getIntExtra("credit",0);
+        System.out.println(username+"qzx");
+        if(navigationView.getHeaderCount() > 0) {
+            View header = navigationView.getHeaderView(0);
+            TextView un = (TextView) header.findViewById(R.id.use);
+            Credit=header.findViewById(R.id.credit);
+            Credit.setText("积分:"+credit);
+            un.setText("用户名:"+username);
+        }
+//        Button button = (Button) findViewById(R.id.OpenButton);
+//        Button seeButton = (Button) findViewById(R.id.button);
+//        Button lockButton = (Button) findViewById(R.id.lockBotton);
+//
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    if (!isStatAccessPermissionSet(MainActivity.this)) {
+//                        startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));   //查看是否为应用设置了权限
+//                        Toast toast = Toast.makeText(getApplicationContext(), "请开启应用统计的使用权限", Toast.LENGTH_SHORT);    //显示toast信息
+//                        toast.show();
+//                    }
+//                } catch (PackageManager.NameNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        seeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    if ((isStatAccessPermissionSet(view.getContext()))) {
+//                        Intent intent3 = new Intent(MainActivity.this, ListActivity.class);
+//                        startActivity(intent3);
+//                        finish();
+//                    }
+//                } catch (PackageManager.NameNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        lockButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    policyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+//                    //AdminReceiver 继承自 DeviceAdminReceiver
+//                    componentName = new ComponentName(view.getContext(), AdminReceiver.class);
+//                    LockScreen lockScreen=new LockScreen(policyManager,componentName);
+//                    if(!lockScreen.lockScreen())activeManage();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+    }
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if (!isStatAccessPermissionSet(MainActivity.this)) {
-                        startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));   //查看是否为应用设置了权限
-                        Toast toast = Toast.makeText(getApplicationContext(), "请开启应用统计的使用权限", Toast.LENGTH_SHORT);    //显示toast信息
-                        toast.show();
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        seeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if ((isStatAccessPermissionSet(view.getContext()))) {
-                        Intent intent3 = new Intent(MainActivity.this, ListActivity.class);
-                        startActivity(intent3);
-                        finish();
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        lockButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    policyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-                    //AdminReceiver 继承自 DeviceAdminReceiver
-                    componentName = new ComponentName(view.getContext(), AdminReceiver.class);
-                    LockScreen lockScreen=new LockScreen(policyManager,componentName);
-                    if(!lockScreen.lockScreen())activeManage();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    @Override
+    public  boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                break;
+            default:
+        }
+        return  true;
     }
     private void activeManage() {
         //启动设备管理(隐式Intent) - 在AndroidManifest.xml中设定相应过滤器

@@ -40,7 +40,7 @@ public class startCartton extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
-        getSupportActionBar().hide();//隐藏标题栏
+
         setContentView(R.layout.activity_start_cartton);
         go = (Button) findViewById(R.id.go);
         Countdown();
