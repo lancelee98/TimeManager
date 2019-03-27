@@ -9,18 +9,169 @@
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="116dp">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#eeeeee"
+            android:orientation="vertical">
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
+                android:background="#cdbaac"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:titleTextAppearance="@style/Toolbar.TitleText"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:orientation="horizontal"></LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/buttonbarList3"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="#eeeeee"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <Button
+                    android:id="@+id/daybuttonlist3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/sharp"
+                    android:text="今天"
+                    android:textColor="#000" />
+
+
+                <Button
+                    android:id="@+id/weekbuttonlist3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/sharp"
+
+                    android:text="过去七天"
+                    android:textColor="#000" />
+
+                <Button
+                    android:id="@+id/monthbuttonlist3"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+
+                    android:background="@drawable/sharp"
+                    android:text="过去一个月"
+                    android:textColor="#000" />
+
+                <Button
+                    android:id="@+id/yearbuttonlist3"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+
+                    android:background="@drawable/sharp"
+                    android:text="过去一年"
+                    android:textColor="#000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#eeeeee"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="125dp"
+                    android:layout_height="33dp"
+                    android:layout_weight="1"
+                    android:background="#eeeeee"
+                    android:text="屏幕使用时间："
+                    android:textColor="#7a6250"
+                    android:textColorLink="@color/colorAccent"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="192dp"
+                    android:layout_height="76dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/nowtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/AppStatisticsList"
+                android:layout_width="350dp"
+                android:layout_height="296dp"
+                android:layout_above="@+id/ActionBarList3"
+                android:layout_below="@+id/buttonbarList3"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/sharp"
+                app:layout_constraintBottom_toTopOf="@+id/ActionBarList3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonbarList3" />
+            <LinearLayout
+                android:id="@+id/ActionBarList3"
+                android:layout_width="match_parent"
+                android:layout_height="53dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:background="#eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/PieButton3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/sharp"
+                    android:textColor="#000"
+                    android:text="Pie" />
+
+                <Button
+                    android:id="@+id/BarButton3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="#000"
+                    android:background="@drawable/sharp"
+                    android:text="Bar" />
+
+                <Button
+                    android:id="@+id/ListButton3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="#000"
+                    android:background="@drawable/sharp"
+                    android:text="List" />
+
+            </LinearLayout>
+        </LinearLayout>
+
 
         <android.support.design.widget.NavigationView
             android:id="@+id/nac_view"
@@ -29,4 +180,5 @@
             android:layout_gravity="start"
             app:headerLayout="@layout/nav_header"
             app:menu="@menu/nav_menu" />
+
 </android.support.v4.widget.DrawerLayout>

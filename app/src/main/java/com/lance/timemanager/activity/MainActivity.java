@@ -1,5 +1,6 @@
 package com.lance.timemanager.activity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.app.admin.DevicePolicyManager;
@@ -8,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
@@ -17,21 +20,32 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lance.timemanager.R;
+import com.lance.timemanager.entity.AppInformation;
 import com.lance.timemanager.util.AdminReceiver;
 import com.lance.timemanager.util.LockScreen;
+import com.lance.timemanager.util.StatisticsInfo;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
-
-
     private static final int MY_REQUEST_CODE = 9999;
     private DevicePolicyManager policyManager;
     private ComponentName componentName;
@@ -39,90 +53,217 @@ public class MainActivity extends AppCompatActivity {
     private TextView Credit;
     public String username;
     public int credit;
+    private int style;
+    private long totalTime;
+    private int totalTimes;
+    private TextView Time;
+    private TextView Nowtime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar=findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        drawerLayout=findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nac_view);
-        ActionBar actionBar=getSupportActionBar();
-        if (actionBar!=null){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.menu);
         }
-        Intent intent=getIntent();
-        username=intent.getStringExtra("username");
-        credit=intent.getIntExtra("credit",0);
-        System.out.println(username+"qzx");
-        if(navigationView.getHeaderCount() > 0) {
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
+        credit = intent.getIntExtra("credit", 0);
+        System.out.println(username + "qzx");
+        if (navigationView.getHeaderCount() > 0) {
             View header = navigationView.getHeaderView(0);
             TextView un = (TextView) header.findViewById(R.id.use);
-            Credit=header.findViewById(R.id.credit);
-            Credit.setText("积分:"+credit);
-            un.setText("用户名:"+username);
+            Credit = header.findViewById(R.id.credit);
+            Credit.setText("积分:" + credit);
+            un.setText("用户名:" + username);
         }
-//        Button button = (Button) findViewById(R.id.OpenButton);
-//        Button seeButton = (Button) findViewById(R.id.button);
-//        Button lockButton = (Button) findViewById(R.id.lockBotton);
-//
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                try {
-//                    if (!isStatAccessPermissionSet(MainActivity.this)) {
-//                        startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));   //查看是否为应用设置了权限
-//                        Toast toast = Toast.makeText(getApplicationContext(), "请开启应用统计的使用权限", Toast.LENGTH_SHORT);    //显示toast信息
-//                        toast.show();
-//                    }
-//                } catch (PackageManager.NameNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        seeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                try {
-//                    if ((isStatAccessPermissionSet(view.getContext()))) {
-//                        Intent intent3 = new Intent(MainActivity.this, ListActivity.class);
-//                        startActivity(intent3);
-//                        finish();
-//                    }
-//                } catch (PackageManager.NameNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        lockButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                try {
-//                    policyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-//                    //AdminReceiver 继承自 DeviceAdminReceiver
-//                    componentName = new ComponentName(view.getContext(), AdminReceiver.class);
-//                    LockScreen lockScreen=new LockScreen(policyManager,componentName);
-//                    if(!lockScreen.lockScreen())activeManage();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+
+        try {
+            if (!isStatAccessPermissionSet(MainActivity.this)) {
+                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));   //查看是否为应用设置了权限
+                Toast toast = Toast.makeText(getApplicationContext(), "请开启TimeManager的使用权限", Toast.LENGTH_SHORT);    //显示toast信息
+                toast.show();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        this.style = StatisticsInfo.DAY;
+        Button buttonday = (Button) findViewById(R.id.daybuttonlist3);
+        buttonday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(style != StatisticsInfo.DAY) {
+                    style = StatisticsInfo.DAY;
+                    onResume();
+                }
+            }
+        });
+        Button buttonweek = (Button) findViewById(R.id.weekbuttonlist3);
+        buttonweek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(style != StatisticsInfo.WEEK) {
+                    style = StatisticsInfo.WEEK;
+                    onResume();
+                }
+            }
+        });
+        Button buttonmonth = (Button) findViewById(R.id.monthbuttonlist3);
+        buttonmonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(style != StatisticsInfo.MONTH) {
+                    style = StatisticsInfo.MONTH;
+                    onResume();
+                }
+            }
+        });
+        Button buttonyear = (Button) findViewById(R.id.yearbuttonlist3);
+        buttonyear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(style != StatisticsInfo.YEAR) {
+                    style = StatisticsInfo.YEAR;
+                    onResume();
+                }
+            }
+        });
+
+    }
+    private void SetButtonColor() {
+        Button buttonday = (Button) findViewById(R.id.daybuttonlist3);
+        Button buttonmonth = (Button) findViewById(R.id.monthbuttonlist3);
+        Button buttonyear = (Button) findViewById(R.id.yearbuttonlist3);
+        Button buttonweek = (Button) findViewById(R.id.weekbuttonlist3);
+        Button buttonpie = (Button)findViewById(R.id.PieButton3);
+        Button buttonbar = (Button)findViewById(R.id.BarButton3);
+        Button buttonlist = (Button)findViewById(R.id.ListButton3);
+
+        buttonday.setTextColor(Color.BLACK);
+        buttonday.setBackgroundColor(Color.WHITE);
+        buttonmonth.setTextColor(Color.BLACK);
+        buttonmonth.setBackgroundColor(Color.WHITE);
+        buttonweek.setTextColor(Color.BLACK);
+        buttonweek.setBackgroundColor(Color.WHITE);
+        buttonyear.setTextColor(Color.BLACK);
+        buttonyear.setBackgroundColor(Color.WHITE);
+        buttonbar.setTextColor(Color.BLACK);
+        buttonpie.setTextColor(Color.BLACK);
+        buttonlist.setTextColor(Color.BLACK);
+
+        switch (style) {
+            case StatisticsInfo.DAY:
+                buttonday.setTextColor(Color.WHITE);
+                buttonday.setBackgroundColor(Color.parseColor("#41240c"));
+                break;
+            case StatisticsInfo.MONTH:
+                buttonmonth.setTextColor(Color.WHITE);
+                buttonmonth.setBackgroundColor(Color.parseColor("#41240c"));
+                break;
+            case StatisticsInfo.WEEK:
+                buttonweek.setTextColor(Color.WHITE);
+                buttonweek.setBackgroundColor(Color.parseColor("#41240c"));
+                break;
+            case StatisticsInfo.YEAR:
+                buttonyear.setTextColor(Color.WHITE);
+                buttonyear.setBackgroundColor(Color.parseColor("#41240c"));
+                break;
+        }
+
+        String classname = this.getClass().getName();
+        if(classname.contains("BarChartActivity")) {
+            buttonbar.setTextColor(Color.YELLOW);
+        }
+        else if(classname.contains("AppStatisticsList")) {
+            buttonlist.setTextColor(Color.YELLOW);
+        }
+        else if(classname.contains("PiePolylineChartActivity")) {
+            buttonpie.setTextColor(Color.YELLOW);
+        }
+    }
+
+    //每次重新进入界面的时候加载listView
+    @SuppressLint("SetTextI18n")
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SetButtonColor();
+
+        List<Map<String,Object>> datalist = null;
+
+        StatisticsInfo statisticsInfo = new StatisticsInfo(this,this.style);
+        totalTime = statisticsInfo.getTotalTime();
+        totalTimes = statisticsInfo.getTotalTimes();
+
+
+        datalist = getDataList(statisticsInfo.getShowList());
+
+        ListView listView = (ListView)findViewById(R.id.AppStatisticsList);
+        SimpleAdapter adapter = new SimpleAdapter(this,datalist,R.layout.inner_list,
+                new String[]{"label","info","times","icon"},
+                new int[]{R.id.label,R.id.info,R.id.times,R.id.icon});
+        listView.setAdapter(adapter);
+
+        adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object o, String s) {
+                if(view instanceof ImageView && o instanceof Drawable){
+
+                    ImageView iv=(ImageView)view;
+                    iv.setImageDrawable((Drawable)o);
+                    return true;
+                }
+                else return false;
+            }
+        });
+        SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日 HH:mm");
+        Date curDate =  new Date(System.currentTimeMillis());
+        Nowtime=findViewById(R.id.nowtime);
+        String nowtime=formatter.format(curDate);
+        Nowtime.setText("统计时间:"+nowtime);
+//        TextView textView = (TextView)findViewById(R.id.text1);
+//        textView.setText("运行总时间: " + DateUtils.formatElapsedTime(totalTime / 1000));
+    }
+
+    private List<Map<String,Object>> getDataList(ArrayList<AppInformation> ShowList) {
+        List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("label","全部应用");
+        map.put("info","运行时间: " + DateUtils.formatElapsedTime(totalTime / 1000));
+        map.put("times","本次开机操作次数: " + totalTimes);
+//        map.put("icon",R.drawable.use);
+        dataList.add(map);
+
+        for(AppInformation appInformation : ShowList) {
+            map = new HashMap<String,Object>();
+            map.put("label",appInformation.getLabel());
+            map.put("info","运行时间: " + DateUtils.formatElapsedTime(appInformation.getUsedTimebyDay() / 1000));
+            map.put("times","本次开机操作次数: " + appInformation.getTimes());
+            map.put("icon",appInformation.getIcon());
+            dataList.add(map);
+        }
+
+        return dataList;
     }
 
     @Override
-    public  boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
             default:
         }
-        return  true;
+        return true;
     }
+
     private void activeManage() {
         //启动设备管理(隐式Intent) - 在AndroidManifest.xml中设定相应过滤器
         Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
