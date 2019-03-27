@@ -63,6 +63,22 @@ public class MainActivity extends AppCompatActivity {
             Credit.setText("积分:"+credit);
             un.setText("用户名:"+username);
         }
+
+        try {
+                    if (!isStatAccessPermissionSet(MainActivity.this)) {
+                        startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));   //查看是否为应用设置了权限
+                        Toast toast = Toast.makeText(getApplicationContext(), "请开启应用统计的使用权限", Toast.LENGTH_SHORT);    //显示toast信息
+                        toast.show();
+                    }
+                    else {
+                        Intent intent3 = new Intent(MainActivity.this, ListActivity.class);
+                        startActivity(intent3);
+                        finish();
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
 //        Button button = (Button) findViewById(R.id.OpenButton);
 //        Button seeButton = (Button) findViewById(R.id.button);
 //        Button lockButton = (Button) findViewById(R.id.lockBotton);
