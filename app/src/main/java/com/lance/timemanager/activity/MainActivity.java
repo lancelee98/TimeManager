@@ -37,7 +37,9 @@ import com.lance.timemanager.util.AdminReceiver;
 import com.lance.timemanager.util.LockScreen;
 import com.lance.timemanager.util.StatisticsInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private int style;
     private long totalTime;
     private int totalTimes;
+    private TextView Time;
+    private TextView Nowtime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         this.style = StatisticsInfo.DAY;
-
         Button buttonday = (Button) findViewById(R.id.daybuttonlist3);
         buttonday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,8 +134,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button buttonbar = (Button) findViewById(R.id.BarButton3);
-
     }
     private void SetButtonColor() {
         Button buttonday = (Button) findViewById(R.id.daybuttonlist3);
@@ -143,26 +144,34 @@ public class MainActivity extends AppCompatActivity {
         Button buttonbar = (Button)findViewById(R.id.BarButton3);
         Button buttonlist = (Button)findViewById(R.id.ListButton3);
 
-        buttonday.setTextColor(Color.WHITE);
-        buttonmonth.setTextColor(Color.WHITE);
-        buttonweek.setTextColor(Color.WHITE);
-        buttonyear.setTextColor(Color.WHITE);
-        buttonbar.setTextColor(Color.WHITE);
-        buttonpie.setTextColor(Color.WHITE);
-        buttonlist.setTextColor(Color.WHITE);
+        buttonday.setTextColor(Color.BLACK);
+        buttonday.setBackgroundColor(Color.WHITE);
+        buttonmonth.setTextColor(Color.BLACK);
+        buttonmonth.setBackgroundColor(Color.WHITE);
+        buttonweek.setTextColor(Color.BLACK);
+        buttonweek.setBackgroundColor(Color.WHITE);
+        buttonyear.setTextColor(Color.BLACK);
+        buttonyear.setBackgroundColor(Color.WHITE);
+        buttonbar.setTextColor(Color.BLACK);
+        buttonpie.setTextColor(Color.BLACK);
+        buttonlist.setTextColor(Color.BLACK);
 
         switch (style) {
             case StatisticsInfo.DAY:
-                buttonday.setTextColor(Color.GREEN);
+                buttonday.setTextColor(Color.WHITE);
+                buttonday.setBackgroundColor(Color.parseColor("#41240c"));
                 break;
             case StatisticsInfo.MONTH:
-                buttonmonth.setTextColor(Color.GREEN);
+                buttonmonth.setTextColor(Color.WHITE);
+                buttonmonth.setBackgroundColor(Color.parseColor("#41240c"));
                 break;
             case StatisticsInfo.WEEK:
-                buttonweek.setTextColor(Color.GREEN);
+                buttonweek.setTextColor(Color.WHITE);
+                buttonweek.setBackgroundColor(Color.parseColor("#41240c"));
                 break;
             case StatisticsInfo.YEAR:
-                buttonyear.setTextColor(Color.GREEN);
+                buttonyear.setTextColor(Color.WHITE);
+                buttonyear.setBackgroundColor(Color.parseColor("#41240c"));
                 break;
         }
 
@@ -213,7 +222,11 @@ public class MainActivity extends AppCompatActivity {
                 else return false;
             }
         });
-
+        SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日 HH:mm");
+        Date curDate =  new Date(System.currentTimeMillis());
+        Nowtime=findViewById(R.id.nowtime);
+        String nowtime=formatter.format(curDate);
+        Nowtime.setText("统计时间:"+nowtime);
 //        TextView textView = (TextView)findViewById(R.id.text1);
 //        textView.setText("运行总时间: " + DateUtils.formatElapsedTime(totalTime / 1000));
     }

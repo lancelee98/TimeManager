@@ -12,25 +12,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/colorPrimary"
+            android:background="#eeeeee"
             android:orientation="vertical">
-
-
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="#cdbaac"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:titleTextAppearance="@style/Toolbar.TitleText"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:orientation="horizontal"></LinearLayout>
 
             <LinearLayout
                 android:id="@+id/buttonbarList3"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:orientation="horizontal"
                 android:background="#eeeeee"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +44,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="今天" />
+                    android:background="@drawable/sharp"
+                    android:text="今天"
+                    android:textColor="#000" />
 
 
                 <Button
@@ -49,46 +54,77 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="过去七天" />
+                    android:background="@drawable/sharp"
+
+                    android:text="过去七天"
+                    android:textColor="#000" />
 
                 <Button
                     android:id="@+id/monthbuttonlist3"
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="过去一个月" />
+
+                    android:background="@drawable/sharp"
+                    android:text="过去一个月"
+                    android:textColor="#000" />
 
                 <Button
                     android:id="@+id/yearbuttonlist3"
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="过去一年" />
-            </LinearLayout>
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
 
+                    android:background="@drawable/sharp"
+                    android:text="过去一年"
+                    android:textColor="#000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#eeeeee"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="125dp"
+                    android:layout_height="33dp"
+                    android:layout_weight="1"
+                    android:background="#eeeeee"
+                    android:text="屏幕使用时间："
+                    android:textColor="#7a6250"
+                    android:textColorLink="@color/colorAccent"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="192dp"
+                    android:layout_height="76dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/nowtime"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="屏幕使用时间："
-                    android:textSize="15sp"
-                    android:textColor="#7a6250"/>
+                    android:textSize="18sp" />
+
             </LinearLayout>
 
             <ListView
                 android:id="@+id/AppStatisticsList"
-                android:layout_width="375dp"
-                android:layout_height="280dp"
+                android:layout_width="350dp"
+                android:layout_height="296dp"
                 android:layout_above="@+id/ActionBarList3"
                 android:layout_below="@+id/buttonbarList3"
+                android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="#fff"
+                android:background="@drawable/sharp"
                 app:layout_constraintBottom_toTopOf="@+id/ActionBarList3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -101,6 +137,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
+                android:background="#eeeeee"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -110,6 +147,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:background="@drawable/sharp"
+                    android:textColor="#000"
                     android:text="Pie" />
 
                 <Button
@@ -117,6 +156,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:textColor="#000"
+                    android:background="@drawable/sharp"
                     android:text="Bar" />
 
                 <Button
@@ -124,6 +165,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:textColor="#000"
+                    android:background="@drawable/sharp"
                     android:text="List" />
 
             </LinearLayout>
