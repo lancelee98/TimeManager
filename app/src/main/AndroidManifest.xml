@@ -44,7 +44,8 @@
         <activity android:name=".pictureExamle.barchartPicture" />
         <activity android:name=".pictureExamle.circlePicture" />
         <activity android:name=".activity.MainActivity"
-            android:label="时长统计"/>
+            android:label="时长统计"
+            />
     </application>
 
 </manifest>
