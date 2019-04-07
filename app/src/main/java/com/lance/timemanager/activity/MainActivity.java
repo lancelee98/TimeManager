@@ -36,6 +36,7 @@ import com.lance.timemanager.entity.AppInformation;
 import com.lance.timemanager.util.AdminReceiver;
 import com.lance.timemanager.util.LockScreen;
 import com.lance.timemanager.util.StatisticsInfo;
+import com.lance.timemanager.util.ToolUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -227,29 +228,40 @@ public class MainActivity extends AppCompatActivity {
         Nowtime=findViewById(R.id.nowtime);
         String nowtime=formatter.format(curDate);
         Nowtime.setText("统计时间:"+nowtime);
-//        TextView textView = (TextView)findViewById(R.id.text1);
-//        textView.setText("运行总时间: " + DateUtils.formatElapsedTime(totalTime / 1000));
+        TextView textView = (TextView)findViewById(R.id.time);
+        textView.setText( ToolUtils.parseDate(totalTime / 1000));
     }
 
     private List<Map<String,Object>> getDataList(ArrayList<AppInformation> ShowList) {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("label","全部应用");
-        map.put("info","运行时间: " + DateUtils.formatElapsedTime(totalTime / 1000));
-        map.put("times","本次开机操作次数: " + totalTimes);
-//        map.put("icon",R.drawable.use);
-        dataList.add(map);
+//        TextView textView=(TextView)findViewById(R.id.time);
+//        textView.setText(DateUtils.formatElapsedTime(totalTime / 1000));
+//        Map<String,Object> map = new HashMap<String,Object>();
+//        map.put("label","全部应用");
+//        map.put("info","运行时间: " + DateUtils.formatElapsedTime(totalTime / 1000));
+//        map.put("times","本次开机操作次数: " + totalTimes);
+////        map.put("icon",R.drawable.use);
+//        dataList.add(map);
 
         for(AppInformation appInformation : ShowList) {
-            map = new HashMap<String,Object>();
-            map.put("label",appInformation.getLabel());
-            map.put("info","运行时间: " + DateUtils.formatElapsedTime(appInformation.getUsedTimebyDay() / 1000));
-            map.put("times","本次开机操作次数: " + appInformation.getTimes());
-            map.put("icon",appInformation.getIcon());
-            dataList.add(map);
-        }
+            try {
+                Map<String,Object> map = new HashMap<String,Object>();
+                if(appInformation.getLabel().equals("王者荣耀")) continue;
+                String runTime=ToolUtils.parseDate(appInformation.getUsedTimebyDay() / 1000);
+                if(runTime.equals("00分钟"))continue;
+                map.put("label",appInformation.getLabel());
+                map.put("info","运行时间: " +runTime);
+                map.put("times","本次开机操作次数: " + appInformation.getTimes());
+                map.put("icon",appInformation.getIcon());
+                dataList.add(map);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
+        }
         return dataList;
     }
 
