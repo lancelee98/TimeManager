@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.sign"></activity>
+        <activity android:name=".activity.sign"/>
         <activity android:name=".activity.login" />
         <activity android:name=".activity.startCartton">
             <intent-filter>
@@ -43,7 +43,9 @@
         </receiver>
         <activity android:name=".pictureExamle.barchartPicture" />
         <activity android:name=".pictureExamle.circlePicture" />
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity"
+            android:label="时长统计"
+            />
     </application>
 
 </manifest>

@@ -32,11 +32,11 @@ public class login extends AppCompatActivity {
     private String Username;
     private String Password;
     private String realPasswd = "";
+    private int realCredit=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
-        getSupportActionBar().hide();//隐藏标题栏
         setContentView(R.layout.activity_login);
         Login = findViewById(R.id.login);
         Sign=findViewById(R.id.sign);
@@ -70,9 +70,11 @@ public class login extends AppCompatActivity {
                                     ToastUtils.show(login.this,"用户名不存在！");
                                 } else {
                                     if (Password.equals(realPasswd)) {
-//                                        ToastUtils.show(login.this,"登录成功！");
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
+                                        System.out.println(Username+"qzx1");
+                                        intent.putExtra("username",Username);
                                         startActivity(intent);
+                                        ToastUtils.show(login.this,"登录成功！");
                                     } else {
                                         ToastUtils.show(login.this,"密码错误！");
                                     }
@@ -94,12 +96,15 @@ public class login extends AppCompatActivity {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray data = jsonObject.getJSONArray("data");
-            if(data.length()==0)
-                realPasswd="";
+            if(data.length()==0) {
+                realPasswd = "";
+                realCredit = 0;
+            }
             else
                 {
                 JSONObject a=data.getJSONObject(0);
                 realPasswd = a.getString("passwd");
+                realCredit= a.getInt("credit");
                 }
         } catch (Exception e) {
             e.printStackTrace();
