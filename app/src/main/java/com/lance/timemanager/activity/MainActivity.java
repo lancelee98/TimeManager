@@ -31,8 +31,14 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieEntry;
 import com.lance.timemanager.R;
 import com.lance.timemanager.entity.AppInformation;
+import com.lance.timemanager.pictureManagerClass.biscalPirctureManager;
 import com.lance.timemanager.util.AdminReceiver;
 import com.lance.timemanager.util.LockScreen;
 import com.lance.timemanager.util.StatisticsInfo;
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private int totalTimes;
     private TextView Time;
     private TextView Nowtime;
+    private PieChart pieChart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,16 +141,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
+
     private void SetButtonColor() {
         Button buttonday = (Button) findViewById(R.id.daybuttonlist3);
         Button buttonmonth = (Button) findViewById(R.id.monthbuttonlist3);
         Button buttonyear = (Button) findViewById(R.id.yearbuttonlist3);
         Button buttonweek = (Button) findViewById(R.id.weekbuttonlist3);
-        Button buttonpie = (Button)findViewById(R.id.PieButton3);
-        Button buttonbar = (Button)findViewById(R.id.BarButton3);
-        Button buttonlist = (Button)findViewById(R.id.ListButton3);
 
         buttonday.setTextColor(Color.BLACK);
         buttonday.setBackgroundColor(Color.WHITE);
@@ -153,9 +157,6 @@ public class MainActivity extends AppCompatActivity {
         buttonweek.setBackgroundColor(Color.WHITE);
         buttonyear.setTextColor(Color.BLACK);
         buttonyear.setBackgroundColor(Color.WHITE);
-        buttonbar.setTextColor(Color.BLACK);
-        buttonpie.setTextColor(Color.BLACK);
-        buttonlist.setTextColor(Color.BLACK);
 
         switch (style) {
             case StatisticsInfo.DAY:
@@ -174,17 +175,6 @@ public class MainActivity extends AppCompatActivity {
                 buttonyear.setTextColor(Color.WHITE);
                 buttonyear.setBackgroundColor(Color.parseColor("#41240c"));
                 break;
-        }
-
-        String classname = this.getClass().getName();
-        if(classname.contains("BarChartActivity")) {
-            buttonbar.setTextColor(Color.YELLOW);
-        }
-        else if(classname.contains("AppStatisticsList")) {
-            buttonlist.setTextColor(Color.YELLOW);
-        }
-        else if(classname.contains("PiePolylineChartActivity")) {
-            buttonpie.setTextColor(Color.YELLOW);
         }
     }
 
@@ -205,12 +195,13 @@ public class MainActivity extends AppCompatActivity {
 
         datalist = getDataList(statisticsInfo.getShowList());
 
+        initPieView(datalist);
+
         ListView listView = (ListView)findViewById(R.id.AppStatisticsList);
         SimpleAdapter adapter = new SimpleAdapter(this,datalist,R.layout.inner_list,
                 new String[]{"label","info","times","icon"},
                 new int[]{R.id.label,R.id.info,R.id.times,R.id.icon});
         listView.setAdapter(adapter);
-
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object o, String s) {
@@ -223,6 +214,8 @@ public class MainActivity extends AppCompatActivity {
                 else return false;
             }
         });
+        ToolUtils.setListViewHeightBasedOnChildren(listView);
+
         SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日 HH:mm");
         Date curDate =  new Date(System.currentTimeMillis());
         Nowtime=findViewById(R.id.nowtime);
@@ -232,28 +225,54 @@ public class MainActivity extends AppCompatActivity {
         textView.setText( ToolUtils.parseDate(totalTime / 1000));
     }
 
+    private void initPieView(List<Map<String,Object>> datalist) {
+        pieChart = (PieChart) findViewById(R.id.pie);
+        pieChart.removeAllViews();
+
+        List<PieEntry> yvals = new ArrayList<>();
+        List<Integer> colors = new ArrayList<>();
+        String [] strColors={"#cdbaac","#FFCCCC","#99CC99","#CCFFFF","#FFFFCC"};
+        if(datalist.size()>5)
+        {
+            for(int i=0;i<5;i++)
+            {
+                Long value=Long.valueOf(datalist.get(i).get("time").toString());
+                String lable=datalist.get(i).get("label").toString();
+                yvals.add(new PieEntry( value,lable));
+                colors.add(Color.parseColor(strColors[i]));
+            }
+        }
+        else
+        {
+            for(int i=0;i<datalist.size();i++)
+            {
+                Long value=Long.valueOf(datalist.get(i).get("time").toString());
+                String lable=datalist.get(i).get("label").toString();
+                yvals.add(new PieEntry( value,lable));
+                colors.add(Color.parseColor(strColors[i]));
+            }
+        }
+        biscalPirctureManager pieChartManagger=new biscalPirctureManager(pieChart);
+        pieChartManagger.showRingPieChart(yvals,colors);
+
+        pieChart.notifyDataSetChanged();
+        pieChart.invalidate();
+    }
+
     private List<Map<String,Object>> getDataList(ArrayList<AppInformation> ShowList) {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
-
-//        TextView textView=(TextView)findViewById(R.id.time);
-//        textView.setText(DateUtils.formatElapsedTime(totalTime / 1000));
-//        Map<String,Object> map = new HashMap<String,Object>();
-//        map.put("label","全部应用");
-//        map.put("info","运行时间: " + DateUtils.formatElapsedTime(totalTime / 1000));
-//        map.put("times","本次开机操作次数: " + totalTimes);
-////        map.put("icon",R.drawable.use);
-//        dataList.add(map);
-
         for(AppInformation appInformation : ShowList) {
             try {
                 Map<String,Object> map = new HashMap<String,Object>();
                 if(appInformation.getLabel().equals("王者荣耀")) continue;
+                if(appInformation.getLabel().equals("系统桌面")) continue;
                 String runTime=ToolUtils.parseDate(appInformation.getUsedTimebyDay() / 1000);
                 if(runTime.equals("00分钟"))continue;
                 map.put("label",appInformation.getLabel());
                 map.put("info","运行时间: " +runTime);
                 map.put("times","本次开机操作次数: " + appInformation.getTimes());
                 map.put("icon",appInformation.getIcon());
+                map.put("time",appInformation.getUsedTimebyDay() / 1000);
                 dataList.add(map);
             }
             catch (Exception e)
@@ -286,20 +305,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, MY_REQUEST_CODE);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        try {
-//            if((isStatAccessPermissionSet(this))){
-//                Intent intent3 = new Intent(MainActivity.this, ListActivity.class);
-//                startActivity(intent3);
-//                finish();
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private boolean isStatAccessPermissionSet(Context c) throws PackageManager.NameNotFoundException {
@@ -310,102 +315,4 @@ public class MainActivity extends AppCompatActivity {
         return aom.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, info.uid, info.packageName)
                 == AppOpsManager.MODE_ALLOWED;
     }
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//        textView = findViewById(R.id.textView);
-//        button = findViewById(R.id.button2);
-//
-//        //设置标题栏
-//        topBar = (QMUITopBar) findViewById(R.id.topbar);
-//        TextView title = topBar.setTitle("test");
-//        title.setTextSize(23);
-//        title.setTextColor(getResources().getColor(R.color.qmui_config_color_white));
-//        topBar.setBackgroundColor(getResources().getColor(R.color.qmui_config_color_50_blue));
-//        topBar.showTitleView(true);
-//
-//
-////        mTabSegment=findViewById(R.id.tabSegment);
-////        mTabSegment.setHasIndicator(true);  //是否需要显示indicator
-////        mTabSegment.setIndicatorPosition(false);//true 时表示 indicator 位置在 Tab 的上方, false 时表示在下方
-////        mTabSegment.setIndicatorWidthAdjustContent(false);//设置 indicator的宽度是否随内容宽度变化
-////        mTabSegment.addTab(new QMUITabSegment.Tab("1"));
-////        mTabSegment.addTab(new QMUITabSegment.Tab("2"));
-//
-//        button.setOnClickListener(this);
-////        GET_USAGE_ACCESS();
-//    }
-
-
-//    @Override
-//    public void onClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.button2:
-//                new QMUIDialog.MessageDialogBuilder(this)
-//                        .setTitle("QMUI对话框标题")
-//                        .setMessage("这是QMUI框架对话框的内容")
-//                        .addAction("取消", new QMUIDialogAction.ActionListener() {
-//                            @Override
-//                            public void onClick(QMUIDialog dialog, int index) {
-//                                dialog.dismiss();
-//                                Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
-//
-//                            }
-//                        })
-//                        .addAction("确定", new QMUIDialogAction.ActionListener() {
-//                            @Override
-//                            public void onClick(QMUIDialog dialog, int index) {
-//                                dialog.dismiss();
-//                                Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
-//                            }
-//                        })
-//                        .show();
-//        }
-
-//                Log.d("UsageStatsLc","listener");
-//                UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
-//                Calendar calendar = Calendar.getInstance();
-//                long endTime = calendar.getTimeInMillis();
-//                calendar.add(Calendar.DAY_OF_WEEK, -2);
-//                long startTime = calendar.getTimeInMillis();
-//                List<UsageStats> list = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_YEARLY, startTime, endTime);
-//                if (list.size() == 0) {
-//                    GET_USAGE_ACCESS();
-//                    Log.d("UsageStatsLc","0");
-//                } else {
-//                    for (UsageStats usageStats : list) {
-//                        String s = "";
-//                        s += "包名" + usageStats.getPackageName();
-//                        s += "最后一次运行时间" + usageStats.getLastTimeUsed();
-//                        s += "总运行时间" + usageStats.getTotalTimeInForeground();
-//                        try
-//                        {
-//                            Field field=usageStats.getClass().getDeclaredField("mLaunchCount");
-//
-//                            s+="总运行次数"+field+ (int) field.get(usageStats);
-//                        }
-//                        catch (Exception e)
-//                        {
-//                            e.printStackTrace();
-//                        }
-//                        Log.d("UsageStatsLc",s);
-//                    }
-//                }
-//                break;
-//        }
-//    }
-
-//    private void GET_USAGE_ACCESS() {
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//            try {
-//                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-//            } catch (Exception e) {
-//                Toast.makeText(this, "无法开启允许查看使用情况的页面", Toast.LENGTH_LONG).show();
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
 }

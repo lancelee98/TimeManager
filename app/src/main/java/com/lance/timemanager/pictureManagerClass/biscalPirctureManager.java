@@ -131,7 +131,7 @@ public class biscalPirctureManager {
         public void  showRingPieChart(List<PieEntry> yvals, List<Integer> colors){
             //显示为圆环
             pieChart.setDrawHoleEnabled(true);
-            pieChart.setHoleRadius(85f);//设置中间洞的大小
+            pieChart.setHoleRadius(45f);//设置中间洞的大小
 
             //数据集合
             PieDataSet dataset = new PieDataSet(yvals, "");
@@ -142,7 +142,7 @@ public class biscalPirctureManager {
 //        文字的大小
             dataset.setValueTextSize(14);
 //        文字的颜色
-            dataset.setValueTextColor(Color.RED);
+            dataset.setValueTextColor(Color.parseColor("#7A6250"));
 //        文字的样式
             dataset.setValueTypeface(Typeface.DEFAULT_BOLD);
 

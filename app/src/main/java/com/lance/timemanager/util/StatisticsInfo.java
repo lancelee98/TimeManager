@@ -49,11 +49,17 @@ public class StatisticsInfo {
         totalTime = 0;
 
         for (int i = 0; i < AppInfoList.size(); i++) {
-            if (AppInfoList.get(i).getUsedTimebyDay() > 0) { //&& AppInfoList.get(i).getTimes() > 0) {
+            try {
+                if (AppInfoList.get(i).getLabel().equals("王者荣耀")) continue;
+                if (AppInfoList.get(i).getLabel().equals("系统桌面")) continue;
+                if (AppInfoList.get(i).getUsedTimebyDay() > 0) { //&& AppInfoList.get(i).getTimes() > 0) {
 
-                this.ShowList.add(AppInfoList.get(i));
-                totalTime += AppInfoList.get(i).getUsedTimebyDay();
-                totalTimes += AppInfoList.get(i).getTimes();
+                    this.ShowList.add(AppInfoList.get(i));
+                    totalTime += AppInfoList.get(i).getUsedTimebyDay();
+                    totalTimes += AppInfoList.get(i).getTimes();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -139,12 +145,12 @@ public class StatisticsInfo {
 
             if (e.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND) {
                 information.timesPlusPlus();
-                if (e.getTimeStamp() < begintime){
+                if (e.getTimeStamp() < begintime) {
                     continue;
                 }
                 information.setTimeStampMoveToForeground(e.getTimeStamp());
             } else if (e.getEventType() == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                if (e.getTimeStamp() < begintime){
+                if (e.getTimeStamp() < begintime) {
                     continue;
                 }
                 information.setTimeStampMoveToBackGround(e.getTimeStamp());
