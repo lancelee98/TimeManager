@@ -20,9 +20,11 @@ import com.lance.timemanager.util.ToastUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.RequestBody;
 
 public class login extends AppCompatActivity {
     private Button Login;
@@ -32,17 +34,20 @@ public class login extends AppCompatActivity {
     private String Username;
     private String Password;
     private String realPasswd = "";
-    private int realCredit=0;
+    private int realCredit = 0;
+    private int Code;
+    private String Msg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
         setContentView(R.layout.activity_login);
         Login = findViewById(R.id.login);
-        Sign=findViewById(R.id.sign);
+        Sign = findViewById(R.id.sign);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        Sign.setOnClickListener(new View.OnClickListener(){
+        Sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), sign.class);//启动MainActivity
@@ -60,23 +65,23 @@ public class login extends AppCompatActivity {
                         public void run() {
                             try {
                                 OkHttpClient client = new OkHttpClient();
-                                Request request = new Request.Builder().url("http://118.89.37.35:58123/application/user/getInfo.php?userName=" + Username).build();
+                                FormBody.Builder formBody = new FormBody.Builder();
+                                formBody.add("user_name", Username);
+                                Request request = new Request.Builder().url("http://118.89.37.35:8081/user/login").post(formBody.build()).build();
                                 Response response = client.newCall(request).execute();
                                 String responseData = response.body().string();
-                                System.out.println("getRespondData" + responseData);
                                 parseJSONWithJSONObject(responseData);
-                                System.out.println("getRealPassWd"+realPasswd);
-                                if (realPasswd.equals("")) {
-                                    ToastUtils.show(login.this,"用户名不存在！");
+                                if (Code!=200) {
+                                    ToastUtils.show(login.this, Msg);
                                 } else {
                                     if (Password.equals(realPasswd)) {
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
-                                        System.out.println(Username+"qzx1");
-                                        intent.putExtra("username",Username);
+                                        intent.putExtra("username", Username);
+                                        intent.putExtra("credit",realCredit);
                                         startActivity(intent);
-                                        ToastUtils.show(login.this,"登录成功！");
+                                        ToastUtils.show(login.this, "登录成功！");
                                     } else {
-                                        ToastUtils.show(login.this,"密码错误！");
+                                        ToastUtils.show(login.this, "密码错误！");
                                     }
                                 }
                             } catch (Exception e) {
@@ -95,17 +100,18 @@ public class login extends AppCompatActivity {
     private void parseJSONWithJSONObject(String jsonData) {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
+            Code = jsonObject.getInt("code");
+            Msg = jsonObject.getString("msg");
+            System.out.println(Code + Msg);
             JSONArray data = jsonObject.getJSONArray("data");
-            if(data.length()==0) {
+            if (data.length() == 0) {
                 realPasswd = "";
                 realCredit = 0;
-            }
-            else
-                {
-                JSONObject a=data.getJSONObject(0);
+            } else {
+                JSONObject a = data.getJSONObject(0);
                 realPasswd = a.getString("passwd");
-                realCredit= a.getInt("credit");
-                }
+                realCredit = a.getInt("credit");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

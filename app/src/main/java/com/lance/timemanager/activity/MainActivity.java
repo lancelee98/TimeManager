@@ -81,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
-        credit = intent.getIntExtra("credit", 0);
-        System.out.println(username + "qzx");
+        credit = intent.getIntExtra("credit",0);
         if (navigationView.getHeaderCount() > 0) {
             View header = navigationView.getHeaderView(0);
             TextView un = (TextView) header.findViewById(R.id.use);
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             un.setText("用户名:" + username);
         }
 
-        try {
+        try {//初始化权限
             if (!isStatAccessPermissionSet(MainActivity.this)) {
                 startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));   //查看是否为应用设置了权限
                 Toast toast = Toast.makeText(getApplicationContext(), "请开启TimeManager的使用权限", Toast.LENGTH_SHORT);    //显示toast信息
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void SetButtonColor() {
+    private void SetButtonColor() {//改变按钮颜色
         Button buttonday = (Button) findViewById(R.id.daybuttonlist3);
         Button buttonmonth = (Button) findViewById(R.id.monthbuttonlist3);
         Button buttonyear = (Button) findViewById(R.id.yearbuttonlist3);
@@ -181,22 +180,15 @@ public class MainActivity extends AppCompatActivity {
     //每次重新进入界面的时候加载listView
     @SuppressLint("SetTextI18n")
     @Override
-    protected void onResume() {
+    protected void onResume() {//重新加载列表控件
         super.onResume();
-
         SetButtonColor();
-
         List<Map<String,Object>> datalist = null;
-
         StatisticsInfo statisticsInfo = new StatisticsInfo(this,this.style);
         totalTime = statisticsInfo.getTotalTime();
         totalTimes = statisticsInfo.getTotalTimes();
-
-
         datalist = getDataList(statisticsInfo.getShowList());
-
         initPieView(datalist);
-
         ListView listView = (ListView)findViewById(R.id.AppStatisticsList);
         SimpleAdapter adapter = new SimpleAdapter(this,datalist,R.layout.inner_list,
                 new String[]{"label","info","times","icon"},
@@ -215,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         ToolUtils.setListViewHeightBasedOnChildren(listView);
-
         SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日 HH:mm");
         Date curDate =  new Date(System.currentTimeMillis());
         Nowtime=findViewById(R.id.nowtime);

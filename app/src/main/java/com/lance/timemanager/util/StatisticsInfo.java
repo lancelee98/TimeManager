@@ -24,11 +24,11 @@ public class StatisticsInfo {
     final public static int MONTH = 2;
     final public static int YEAR = 3;
 
-    private ArrayList<AppInformation> ShowList;
-    private ArrayList<AppInformation> AppInfoList;
+    private ArrayList<AppInformation> ShowList;//展示数据的列表
+    private ArrayList<AppInformation> AppInfoList;//存储数据的列表
     private List<UsageStats> result;
-    private long totalTime;
-    private int totalTimes;
+    private long totalTime;//总时间
+    private int totalTimes;//总次数
     private int style;
 
     public StatisticsInfo(Context context, int style) {
@@ -52,6 +52,7 @@ public class StatisticsInfo {
             try {
                 if (AppInfoList.get(i).getLabel().equals("王者荣耀")) continue;
                 if (AppInfoList.get(i).getLabel().equals("系统桌面")) continue;
+                if (AppInfoList.get(i).getLabel().equals("率土之滨")) continue;
                 if (AppInfoList.get(i).getUsedTimebyDay() > 0) { //&& AppInfoList.get(i).getTimes() > 0) {
 
                     this.ShowList.add(AppInfoList.get(i));
@@ -162,11 +163,6 @@ public class StatisticsInfo {
             }
             information.calculateRunningTime();
         }
-
-        //再计算一次当前应用的运行时间，因为当前应用，最后得不到MOVE_TO_BACKGROUND 的timeStamp
-//        AppInformation information = mapData.get(context.getPackageName());
-//        information.setTimeStampMoveToBackGround(now);
-//        information.calculateRunningTime();
 
         return new ArrayList<>(mapData.values());
     }
