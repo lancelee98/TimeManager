@@ -64,17 +64,18 @@ public class login extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
-                                OkHttpClient client = new OkHttpClient();
-                                FormBody.Builder formBody = new FormBody.Builder();
-                                formBody.add("user_name", Username);
-                                Request request = new Request.Builder().url("http://118.89.37.35:8081/user/login").post(formBody.build()).build();
-                                Response response = client.newCall(request).execute();
-                                String responseData = response.body().string();
-                                parseJSONWithJSONObject(responseData);
-                                if (Code!=200) {
-                                    ToastUtils.show(login.this, Msg);
-                                } else {
-                                    if (Password.equals(realPasswd)) {
+//                                OkHttpClient client = new OkHttpClient();
+////                                FormBody.Builder formBody = new FormBody.Builder();
+////                                formBody.add("user_name", Username);
+////                                Request request = new Request.Builder().url("http://119.3.164.11:8081/user/login").post(formBody.build()).build();
+////                                Response response = client.newCall(request).execute();
+////                                String responseData = response.body().string();
+////                                parseJSONWithJSONObject(responseData);
+////                                if (Code!=200) {
+////                                    ToastUtils.show(login.this, Msg);
+////                                } else {
+////                                    if (Password.equals(realPasswd)) {
+                                if(true){
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
                                         intent.putExtra("username", Username);
                                         intent.putExtra("credit",realCredit);
@@ -83,7 +84,7 @@ public class login extends AppCompatActivity {
                                     } else {
                                         ToastUtils.show(login.this, "密码错误！");
                                     }
-                                }
+//                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
