@@ -17,6 +17,7 @@ import com.lance.timemanager.util.ToastUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -30,6 +31,7 @@ public class sign extends AppCompatActivity {
     private String Password;
     private String PasswordAgain;
     private String msg;
+    private  int code;
     private ImageView Exit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +67,15 @@ public class sign extends AppCompatActivity {
                             public void run() {
                                 try {
                                     OkHttpClient client = new OkHttpClient();
-                                    Request request = new Request.Builder().url("http://118.89.37.35:58123/application/user/addUser.php?userName=" + Username + "&passwd=" + Password).build();
+                                    FormBody.Builder formBody = new FormBody.Builder();
+                                    formBody.add("userName", Username);
+                                    formBody.add("passwd",Password);
+                                    Request request = new Request.Builder().url("http://118.89.37.35:8081/user/sign").post(formBody.build()).build();
                                     Response response = client.newCall(request).execute();
                                     String responseData = response.body().string();
                                     parseJSONWithJSONObject(responseData);
-                                    System.out.println(msg + "sdf");
-                                    if (!msg.equals("success")) {
-                                        ToastUtils.show(sign.this, "用户名已存在！");
+                                    if (code!=200) {
+                                        ToastUtils.show(sign.this, msg);
                                     } else {
                                         ToastUtils.show(sign.this, "注册成功！");
                                         Intent intent = new Intent(getApplicationContext(), login.class);//返回登录界面
@@ -91,7 +95,9 @@ public class sign extends AppCompatActivity {
     private void parseJSONWithJSONObject(String jsonData) {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
+            System.out.println(jsonObject);
             msg=jsonObject.getString("msg");
+            code=jsonObject.getInt("code");
         } catch (Exception e) {
             e.printStackTrace();
         }

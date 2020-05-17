@@ -75,7 +75,7 @@ public class login extends AppCompatActivity {
                                     ToastUtils.show(login.this, Msg);
                                 } else {
                                     if (Password.equals(realPasswd)) {
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);//启动MainActivity
+                                        Intent intent = new Intent(getApplicationContext(), ListActivity.class);//启动MainActivity
                                         intent.putExtra("username", Username);
                                         intent.putExtra("credit",realCredit);
                                         startActivity(intent);
